@@ -125,7 +125,7 @@ module Mongoid::Acts::NestedSet
           left += width
         end
 
-        scope_class.mongo_session.with(:safe => true) do |session|
+        scope_class.mongo_session.with({}) do |session|
           collection = session[scope_class.collection_name]
           scope = nested_set_scope.remove_order_by
 
@@ -188,7 +188,7 @@ module Mongoid::Acts::NestedSet
     def update_self_and_descendants_depth
       if depth?
         scope_class.each_with_level(self_and_descendants) do |node, level|
-          node.with(:safe => true).set(:depth, level) unless node.depth == level
+          node.with({}).set(:depth, level) unless node.depth == level
         end
         self.reload
       end
@@ -214,11 +214,11 @@ module Mongoid::Acts::NestedSet
       # update lefts and rights for remaining nodes
       diff = right - left + 1
 
-      scope_class.with(:safe => true).where(
+      scope_class.with({}).where(
         nested_set_scope.where(left_field_name.to_sym.gt => right).selector
       ).inc(left_field_name, -diff)
 
-      scope_class.with(:safe => true).where(
+      scope_class.with({}).where(
         nested_set_scope.where(right_field_name.to_sym.gt => right).selector
       ).inc(right_field_name, -diff)
 

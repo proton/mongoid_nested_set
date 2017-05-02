@@ -24,7 +24,7 @@ module Mongoid::Acts::NestedSet
 
         node.class.collection.find(:_id => node.id).update(
           {"$set" => {left_field_name => left, right_field_name => right}},
-          {:safe => true}
+          {}
         )
       end
 
